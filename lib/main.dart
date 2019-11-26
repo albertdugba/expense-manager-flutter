@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:academind_flutter/widgets/chart.dart';
 import 'package:academind_flutter/model/transaction.dart';
 import 'package:academind_flutter/widgets/new_transaction.dart';
 import 'package:academind_flutter/widgets/transaction_list.dart';
@@ -48,10 +49,16 @@ class _HomePageState extends State<HomePage> {
   final amountController = TextEditingController();
 
   final List<Transaction> _userTransaction = [
-    Transaction(id: 't1', title: 'Shoes', amount: 45.90, date: DateTime.now()),
-    Transaction(id: 't2', title: 'Bag', amount: 55.70, date: DateTime.now()),
-    Transaction(id: 't3', title: 'Pencil', amount: 0.90, date: DateTime.now()),
+    // Transaction(id: 't1', title: 'Shoes', amount: 45.90, date: DateTime.now()),
+    // Transaction(id: 't2', title: 'Bag', amount: 55.70, date: DateTime.now()),
+    // Transaction(id: 't3', title: 'Pencil', amount: 0.90, date: DateTime.now()),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _userTransaction.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
 
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
@@ -100,6 +107,7 @@ class _HomePageState extends State<HomePage> {
                 elevation: 5.0,
               ),
             ),
+            Chart(_recentTransactions),
             TransactionList(_userTransaction)
           ],
         ),
