@@ -20,6 +20,7 @@ class Application extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,
               ),
+              button: TextStyle(color: Colors.white),
             ),
         primarySwatch: Colors.purple,
         accentColor: Colors.amber[900],
@@ -103,7 +104,6 @@ class _HomePageState extends State<HomePage> {
               width: 400.0,
               child: Card(
                 color: Colors.purple[800],
-                child: Text('Chart'),
                 elevation: 5.0,
               ),
             ),
