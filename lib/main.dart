@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'package:academind_flutter/widgets/chart.dart';
 import 'package:academind_flutter/model/transaction.dart';
@@ -50,9 +51,9 @@ class _HomePageState extends State<HomePage> {
   final amountController = TextEditingController();
 
   final List<Transaction> _userTransaction = [
-    // Transaction(id: 't1', title: 'Shoes', amount: 45.90, date: DateTime.now()),
-    // Transaction(id: 't2', title: 'Bag', amount: 55.70, date: DateTime.now()),
-    // Transaction(id: 't3', title: 'Pencil', amount: 0.90, date: DateTime.now()),
+    Transaction(id: 't1', title: 'Shoes', amount: 45.90, date: DateTime.now()),
+    Transaction(id: 't2', title: 'Bag', amount: 55.70, date: DateTime.now()),
+    Transaction(id: 't3', title: 'Pencil', amount: 0.90, date: DateTime.now()),
   ];
 
   List<Transaction> get _recentTransactions {
@@ -70,6 +71,29 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _userTransaction.add(newTx);
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransaction.retainWhere((data) {
+        if (data.id == id) {
+          Alert(
+            context: context,
+            type: AlertType.error,
+            title: "Delete Transaction id $id",
+            desc: "Are you sure you want to delete it?",
+            buttons: [
+              DialogButton(
+                child: Text('Delete', style: TextStyle(color: Colors.red)),
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show();
+        }
+      });
+      // _userTransaction.removeWhere((tx) => tx.id == id);
     });
   }
 
@@ -108,7 +132,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Chart(_recentTransactions),
-            TransactionList(_userTransaction)
+            TransactionList(_userTransaction, _deleteTransaction)
           ],
         ),
       ),
