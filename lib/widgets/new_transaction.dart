@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addNewTx;
@@ -14,10 +15,12 @@ class _NewTransactionState extends State<NewTransaction> {
   DateTime _selectedDate;
 
   void _submitData() {
+    if (_amountController.toString().isEmpty) return;
     final enteredTitle = _titleController.text;
     final enteredAmount = double.parse(_amountController.text);
-    if (enteredTitle.isEmpty || enteredAmount < 0) return;
-    widget.addNewTx(enteredTitle, enteredAmount);
+    if (enteredTitle.isEmpty || enteredAmount < 0 || _selectedDate == null)
+      return;
+    widget.addNewTx(enteredTitle, enteredAmount, _selectedDate);
 
     Navigator.pop(context);
   }
@@ -30,7 +33,9 @@ class _NewTransactionState extends State<NewTransaction> {
             lastDate: DateTime.now())
         .then((pickedDate) {
       if (pickedDate == null) return;
-      _selectedDate = pickedDate;
+      setState(() {
+        _selectedDate = pickedDate;
+      });
       print(_selectedDate);
     });
   }
@@ -57,7 +62,11 @@ class _NewTransactionState extends State<NewTransaction> {
               height: 70.0,
               child: Row(
                 children: <Widget>[
-                  Text('No Date Chosen'),
+                  Expanded(
+                    child: Text(_selectedDate == null
+                        ? 'No Date Chosen'
+                        : ' Picked Date: ${DateFormat.yMd().format(_selectedDate)}'),
+                  ),
                   FlatButton(
                     textColor: Theme.of(context).primaryColor,
                     onPressed: _percentDatePicker,
